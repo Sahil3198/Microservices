@@ -1,0 +1,39 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: UserService
+  datasource:
+    url: jdbc:mysql://localhost:3306/rest_api
+    username: root
+    password: 9hOyoS05wdqR
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  config:
+    import: "configserver:http://localhost:9296"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+logging:
+  level:
+    org:
+      springframework:
+        - security: DEBUG
+        - security:
+            web:
+              csrf: DEBUG
+        - cloud:
+            gateway: DEBUG
+        - web: DEBUG
+
+debug: true
