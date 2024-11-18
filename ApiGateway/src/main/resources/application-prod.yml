@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: ERROR
+
+spring:
+  security:
+    csrf:
+      enabled: false
+  application:
+    name: ApiGateway
+  profiles:
+    active: prod
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: reactive
+  config:
+    import: "configserver:http://config-server:9296"
+  cloud:
+    gateway:
+      routes:
+        - id: UserService
+          uri: lb://UserService
+          predicates:
+            - Path=/users/**
+          filters:
+            - name: AuthenticationFilter
+            - name: CircuitBreaker
+              args:
+                name: UserService
+                fallbackUri: forward:/userServiceFallback
+        - id: AuthenticationService
+          uri: lb://AuthenticationService
+          predicates:
+            - Path=/authenticate/**
+          filters:
+            - name: AuthenticationFilter
+            - name: CircuitBreaker
+              args:
+                name: AuthenticationService
+                fallbackUri: forward:/authServiceFallback

@@ -1,0 +1,14 @@
+CREATE DATABASE IF NOT EXISTS rest_api;
+
+USE rest_api;
+
+CREATE TABLE IF NOT EXISTS USER (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    is_verified BOOLEAN NOT NULL DEFAULT FALSE
+);

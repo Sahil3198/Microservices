@@ -1,0 +1,16 @@
+server:
+  port: 9296
+
+spring:
+  application:
+    name: ConfigServer
+  profiles:
+    active: prod
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/Sahil3198/Spring-Config-Server
+          force-pull: true
+          default-label: master
+          clone-on-start: true
