@@ -1,1 +1,1 @@
-Sample of microservices using Spring Cloud. 
+Sample of microservices using Spring Cloud, spring boot and mysql. 
