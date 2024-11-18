@@ -39,7 +39,7 @@ jobs:
 
             if [ -f "$dir/pom.xml" ] && [ -f "$dir/Dockerfile" ]; then
               cd $dir
-              mvn clean install -DskipTests
+              mvn clean install -DskipTests -Dspring.profiles.active=prod
               docker build -t sahilparekh/$IMAGE_NAME:latest .
               docker push sahilparekh/$IMAGE_NAME:latest
               cd ..
