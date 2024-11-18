@@ -1,0 +1,56 @@
+name: CI/CD for Microservices on Render
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Java for building microservices
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+
+      # Step 3: Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker images
+        run: |
+          for dir in */; do
+            # Extract directory name and convert to lowercase with hyphens
+            ORIGINAL_NAME=$(basename "$dir")
+            IMAGE_NAME=$(echo "$ORIGINAL_NAME" | sed 's/\([a-z]\)\([A-Z]\)/\1-\2/g' | tr '[:upper:]' '[:lower:]')
+
+            echo "Processing $ORIGINAL_NAME as $IMAGE_NAME"
+
+            if [ -f "$dir/pom.xml" ] && [ -f "$dir/Dockerfile" ]; then
+              cd $dir
+              mvn clean install -DskipTests
+              docker build -t sahilparekh/$IMAGE_NAME:latest .
+              docker push sahilparekh/$IMAGE_NAME:latest
+              cd ..
+            fi
+          done
+
+
+      # Step 5: Deploy to Render
+      - name: Deploy to production
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.MY_RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.MY_RENDER_API_KEY }}
+          wait-for-success: true
