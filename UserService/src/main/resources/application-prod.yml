@@ -4,10 +4,8 @@ server:
 spring:
   application:
     name: UserService
-  profiles:
-    active: prod
   datasource:
-    url: jdbc:mysql://mysql:3307/rest_api
+    url: jdbc:mysql://localhost:3307/rest_api
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -17,11 +15,11 @@ spring:
       ddl-auto: update
     show-sql: true
   config:
-    import: "configserver:http://config-server:9296"
+    import: "configserver:http://localhost:9296"
 
 eureka:
   client:
     service-url:
-      defaultZone: http://api-gateway:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
     register-with-eureka: true
     fetch-registry: true

@@ -4,12 +4,10 @@ server:
 spring:
   application:
     name: AuthenticationService
-  profiles:
-    active: prod
 
 eureka:
   client:
     service-url:
-      defaultZone: http://api-gateway:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
